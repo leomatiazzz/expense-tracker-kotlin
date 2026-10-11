@@ -1,122 +1,168 @@
-# Expense Tracker Android 🇧🇷
+# MeuBolso — Controle de Gastos Pessoais 💰
 
-Bem-vindo ao **Expense Tracker Android**! Este projeto foi desenvolvido para ajudar os usuários a controlar suas despesas diárias de maneira simples e prática.
+[![Kotlin](https://img.shields.io/badge/Kotlin-2.0+-7F52FF?logo=kotlin&logoColor=white)](#)
+[![Jetpack Compose](https://img.shields.io/badge/Jetpack%20Compose-Android-4285F4?logo=jetpackcompose&logoColor=white)](#)
+[![Material 3](https://img.shields.io/badge/Material%203-Design-757575?logo=materialdesign&logoColor=white)](#)
+[![Room](https://img.shields.io/badge/Room-Database-3DDC84?logo=android&logoColor=white)](#)
 
-O aplicativo permite adicionar, visualizar e analisar despesas por meio de estatísticas e gráficos intuitivos. Ele utiliza práticas modernas de desenvolvimento Android, incluindo **Jetpack Compose**, **Room Database**, **Dagger Hilt** para injeção de dependências e a arquitetura **MVVM**.
+Aplicativo Android desenvolvido em **Kotlin** como projeto final do módulo de desenvolvimento Android. O **MeuBolso** permite cadastrar despesas pessoais, organizar os gastos por categoria e consultar os registros de maneira simples, intuitiva e prática.
 
 ---
 
-## ✨ Funcionalidades
+## 📋 Informações Acadêmicas
 
-- **Adicionar despesas:** registre suas despesas diárias com apenas alguns toques.
-- **Acompanhar despesas:** visualize uma lista de todas as despesas cadastradas, organizadas por data e categoria.
-- **Analisar gastos com estatísticas:** obtenha informações sobre seus hábitos de consumo por meio de estatísticas detalhadas e gráficos.
+- **Aluno:** Léo Matias Araújo
+- **Matrícula:** Não se aplica
+- **Data de entrega:** 09/10/2026
+- **Projeto:** MeuBolso — Controle de Gastos Pessoais
+
+---
+
+## 🎯 Justificativa da Escolha do Tema
+
+Escolhi desenvolver o **MeuBolso** porque o controle de gastos pessoais é uma necessidade presente no cotidiano e representa uma excelente oportunidade de aplicar os conhecimentos adquiridos durante o módulo de desenvolvimento Android.
+
+O tema permite trabalhar com funcionalidades essenciais em aplicativos reais do mercado, tais como:
+- Criação e validação de formulários;
+- Organização e segmentação por categorias;
+- Navegação fluida entre telas;
+- Armazenamento local e persistência de dados.
+
+Além de sua utilidade prática, o desenvolvimento do aplicativo possibilitou consolidar e aprofundar os conhecimentos em **Kotlin**, **Jetpack Compose**, persistência de dados com **Room** e organização de código estruturado na arquitetura **MVVM**.
+
+---
+
+## 📱 Descrição do Aplicativo
+
+O **MeuBolso** é um aplicativo Android voltado para o controle financeiro pessoal. Seu principal objetivo é permitir que o usuário registre e consulte seus gastos de forma organizada, facilitando o acompanhamento financeiro diário.
+
+### Funcionalidades
+- ➕ **Cadastrar despesas:** informar a descrição, o valor e a categoria de cada gasto.
+- 📋 **Visualizar despesas:** consultar a listagem completa de registros cadastrados.
+- 🔍 **Consultar detalhes:** visualizar as informações completas de uma despesa específica.
+- 🏷️ **Filtrar por categoria:** organizar a visualização dos gastos conforme a categoria selecionada.
+- 🗑️ **Excluir despesas:** remover registros indesejados com confirmação de segurança.
+- 📅 **Consultar datas e valores:** visualização dos lançamentos com datas e valores monetários devidamente formatados.
+
+> **Persistência de Dados:**  
+> Os dados são armazenados localmente no dispositivo utilizando o **Room Database** (abstração sobre SQLite). Dessa forma, os registros permanecem salvos com segurança mesmo após o fechamento e a reabertura do aplicativo.
 
 ---
 
 ## 🛠️ Tecnologias Utilizadas
 
-- **Kotlin:** linguagem de programação utilizada no desenvolvimento do aplicativo.
-- **Jetpack Compose:** ferramenta moderna para a criação de interfaces nativas para Android.
-- **Room Database:** camada de persistência de dados baseada no SQLite, utilizada para gerenciar informações localmente.
-- **Dagger Hilt:** biblioteca de injeção de dependências para Android que simplifica a configuração e o gerenciamento das dependências.
-- **Arquitetura MVVM:** padrão arquitetural que separa a interface do usuário, a lógica de negócios e o gerenciamento dos dados, facilitando a manutenção e a organização do código.
+- **[Kotlin](https://kotlinlang.org/):** Linguagem de programação moderna e concisa utilizada no desenvolvimento da aplicação.
+- **[Jetpack Compose](https://developer.android.com/jetpack/compose):** Toolkit declarativo moderno para construção de interfaces de usuário nativas.
+- **Material 3:** Componentes e padrões visuais modernos para a interface Android.
+- **Navigation Compose:** Gerenciamento declarativo da navegação entre telas.
+- **Room Database:** Biblioteca de persistência local baseada em SQLite.
+- **Kotlin Coroutines & Flow / StateFlow:** Recursos para operações assíncronas e observação reativa de dados.
+- **ViewModel:** Gerenciamento do estado e dos dados utilizados pela interface.
+- **Repository & DAO:** Padrão arquitetural para abstração do acesso a dados e operações no banco.
 
 ---
 
-## 🏗️ Arquitetura e Estrutura do Projeto
+## 🏗️ Arquitetura e Organização do Projeto
 
-O projeto é estruturado seguindo os princípios de *Clean Architecture* e separação de responsabilidades (MVVM):
+O projeto adota a arquitetura **MVVM (Model-View-ViewModel)** com separação de responsabilidades para facilitar a organização, a legibilidade e a manutenção do código.
 
-- **Configuração e Injeção de Dependências:** Gerenciamento de ciclo de vida e dependências centralizadas com **Dagger Hilt**.
-- **Camada de Persistência (Data Layer):** Armazenamento local robusto utilizando **Room Database**, DAOs e fluxos reativos.
-- **Camada de Apresentação (UI Layer):** Telas declarativas e reativas com **Jetpack Compose**, gerenciadas por ViewModels orientadas a estado.
-- **Visualização e Estatísticas:** Processamento e consolidação de dados para geração de gráficos analíticos e acompanhamento de gastos.
+```
+┌──────────────────────────────────────┐
+│           UI (Jetpack Compose)       │
+└──────────────────┬───────────────────┘
+                   │ Observa StateFlow / Dispara Ações
+┌──────────────────▼───────────────────┐
+│              ViewModel               │
+└──────────────────┬───────────────────┘
+                   │ Solicita / Manipula Dados
+┌──────────────────▼───────────────────┐
+│             Repository               │
+└──────────────────┬───────────────────┘
+                   │ Executa Operações
+┌──────────────────▼───────────────────┐
+│        DAO (Data Access Object)      │
+└──────────────────┬───────────────────┘
+                   │ Persistência Local
+┌──────────────────▼───────────────────┐
+│             Room Database            │
+└──────────────────────────────────────┘
+```
+
+### Principais Responsabilidades
+- **Model:** Representa os modelos de dados utilizados pela aplicação, incluindo a entidade de despesas.
+- **DAO (Data Access Object):** Define as operações de consulta e manipulação dos registros no banco de dados.
+- **Repository:** Intermedeia o acesso aos dados e centraliza as operações de persistência.
+- **ViewModel:** Gerencia o estado da aplicação e disponibiliza os dados e as ações necessárias para a interface.
+- **Interface (UI):** Apresenta as telas e recebe as interações do usuário por meio do Jetpack Compose.
+- **Room Database:** Gerencia o armazenamento local SQLite das despesas.
 
 ---
 
-## 📱 Capturas de Tela
-
-Confira as capturas de tela do aplicativo Expense Tracker:
-
-| Tela Inicial | Adicionar Despesa | Estatísticas |
-| :---: | :---: | :---: |
-| Tela principal do aplicativo | Cadastro de despesas | Gráficos e resumo dos gastos |
-
-> ℹ️ **Observação:** Adicione ou mantenha as imagens correspondentes na pasta `screenshots` do projeto para exibi-las nesta seção.
-
----
-
-## 🚀 Como Começar
+## 🚀 Como Executar o Projeto
 
 ### Pré-requisitos
+- **Android Studio** instalado.
+- **Android SDK** compatível com a configuração do projeto.
+- **JDK** e ferramentas de compilação compatíveis com as versões configuradas no Gradle.
+- **Emulador Android** ou dispositivo físico com **Depuração USB** habilitada.
 
-Antes de executar o projeto, certifique-se de ter instalado:
+### Instalação e Execução
 
-- [Android Studio Bumblebee](https://developer.android.com/studio) ou versão posterior.
-- Java 11 ou versão posterior.
-- Android SDK com suporte à API 21 ou superior.
-
-### Instalação
-
-1. **Clone o repositório:**
+1. **Clone este repositório:**
    ```bash
    git clone https://github.com/leomatiazzz/expense-tracker-kotlin.git
    ```
 
 2. **Abra o projeto no Android Studio:**
-   - Selecione a pasta do repositório que você acabou de clonar.
+   - Inicie o Android Studio.
+   - Selecione a opção para abrir um projeto existente (**Open**) e escolha a pasta clonada.
 
-3. **Sincronize o projeto com o Gradle:**
-   - Aguarde a conclusão da sincronização das dependências.
+3. **Sincronize as dependências:**
+   - Aguarde a sincronização do Gradle e o download das dependências.
 
 4. **Execute o aplicativo:**
-   - Inicie o aplicativo em um emulador Android ou em um dispositivo físico compatível.
+   - Selecione um emulador Android ou conecte um dispositivo físico compatível.
+   - Execute o aplicativo utilizando o botão **Run** (`▶`) ou o atalho `Shift + F10`.
+
+> [!TIP]
+> Caso ocorram erros de compilação ou sincronização, verifique as mensagens exibidas na janela **Build** / **Sync** do Android Studio.
 
 ---
 
-## 📖 Como Utilizar
+## 🧪 Testes e Validação
 
-### Adicionando uma despesa
-1. Toque no botão para adicionar uma despesa.
-2. Informe o valor da despesa.
-3. Selecione uma categoria.
-4. Adicione observações, se necessário.
-5. Salve a despesa para registrá-la no aplicativo.
-
-### Visualizando despesas
-1. Acesse a tela de listagem de despesas.
-2. Consulte as despesas registradas.
-3. Se a funcionalidade estiver disponível na versão utilizada, selecione uma despesa para editá-la ou excluí-la.
-
-### Acompanhando os gastos com estatísticas
-1. Acesse a seção de estatísticas.
-2. Consulte os gráficos e resumos apresentados.
-3. Analise seus hábitos de consumo ao longo do tempo.
+- O projeto inclui **testes unitários** relacionados às regras de validação e formatação de valores monetários.
+- A compilação e os testes podem ser executados no ambiente de desenvolvimento para verificar o funcionamento da versão atual do código:
+  ```bash
+  ./gradlew test
+  ```
+- Também é recomendado testar manualmente o fluxo completo no emulador ou dispositivo físico:
+  - Cadastro de despesas
+  - Listagem e detalhes
+  - Filtragem por categoria
+  - Exclusão com confirmação
+  - Persistência dos dados após fechar e reabrir o app
 
 ---
 
-## 🤝 Contribuições
+## 📝 Observações
 
-Contribuições são bem-vindas! Se você deseja ajudar a melhorar este projeto, pode:
-
-- Relatar problemas na seção de **Issues**.
-- Sugerir novas funcionalidades.
-- Enviar melhorias por meio de **Pull Requests**.
-
-> Antes de contribuir, confira as práticas e a estrutura existentes no projeto.
+- O armazenamento das despesas é local, utilizando Room Database (não requer conexão com a internet).
+- O aplicativo foi desenvolvido para fins acadêmicos e de aprendizagem.
+- As funcionalidades descritas correspondem ao escopo do projeto e estão preparadas para receber melhorias em versões futuras.
+- A execução e a validação devem ser realizadas com base no código presente neste repositório.
 
 ---
 
-## 📬 Contato
+## 👨‍💻 Autor
 
-Em caso de dúvidas ou sugestões, entre em contato com o desenvolvedor:
+**Léo Matias Araújo**
 
-- **E-mail:** [leomatiasaraujo@gmail.com](mailto:leomatiasaraujo@gmail.com)
-- **Repositório:** [Expense Tracker Kotlin](https://github.com/leomatiazzz/expense-tracker-kotlin)
+- 🐙 **GitHub:** [@leomatiazzz](https://github.com/leomatiazzz)
+- 📦 **Repositório do projeto:** [expense-tracker-kotlin](https://github.com/leomatiazzz/expense-tracker-kotlin)
 
 ---
 
 <p align="center">
-  Desenvolvido com Kotlin e tecnologias modernas para Android. ❤️
+  Desenvolvido com <b>Kotlin</b>, <b>Jetpack Compose</b> e tecnologias modernas para Android. 💚
 </p>
