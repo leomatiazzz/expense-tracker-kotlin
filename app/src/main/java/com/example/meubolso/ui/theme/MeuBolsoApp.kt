@@ -87,18 +87,24 @@ fun MeuBolsoApp(viewModel: ExpenseViewModel) {
         startDestination = "list"
     ) {
         composable("list") {
-            val expenses by viewModel.filteredExpenses
+            val filteredExpenses by viewModel.filteredExpenses
                 .collectAsStateWithLifecycle()
-            val totalExpensesList by viewModel.expenses
+            val allExpensesList by viewModel.expenses
                 .collectAsStateWithLifecycle()
             val selectedCategory by viewModel.selectedCategory
                 .collectAsStateWithLifecycle()
 
+            val activeCategoryName = selectedCategory ?: "Todas"
+            val displayExpenses = if (activeCategoryName == "Todas") allExpensesList else filteredExpenses
+            val displayTotalCents = displayExpenses.sumOf { it.amountCents }
+            val displayCount = displayExpenses.size
+
             ExpenseListScreen(
-                expenses = expenses,
-                totalExpensesCount = totalExpensesList.size,
-                grandTotalCents = totalExpensesList.sumOf { (cents) -> cents },
-                selectedCategory = selectedCategory ?: "Todas",
+                expenses = filteredExpenses,
+                displayCount = displayCount,
+                displayTotalCents = displayTotalCents,
+                totalExpensesCountOverall = allExpensesList.size,
+                selectedCategory = activeCategoryName,
                 onSelectCategory = { category ->
                     viewModel.setCategoryFilter(if (category == "Todas") null else category)
                 },
@@ -152,8 +158,9 @@ fun MeuBolsoApp(viewModel: ExpenseViewModel) {
 @Composable
 private fun ExpenseListScreen(
     expenses: List<Expense>,
-    totalExpensesCount: Int,
-    grandTotalCents: Long,
+    displayCount: Int,
+    displayTotalCents: Long,
+    totalExpensesCountOverall: Int,
     selectedCategory: String,
     onSelectCategory: (String) -> Unit,
     onAdd: () -> Unit,
@@ -203,14 +210,17 @@ private fun ExpenseListScreen(
             ) {
                 Column(Modifier.padding(20.dp)) {
                     Text(
-                        "Total de gastos registrados",
+                        text = if (selectedCategory == "Todas")
+                            "Total de gastos registrados"
+                        else
+                            "Total em $selectedCategory",
                         style = MaterialTheme.typography.labelLarge
                     )
 
                     Spacer(Modifier.height(8.dp))
 
                     Text(
-                        ExpenseUtils.formatCurrency(grandTotalCents),
+                        ExpenseUtils.formatCurrency(displayTotalCents),
                         style = MaterialTheme.typography.headlineMedium,
                         fontWeight = FontWeight.Bold,
                         color = MaterialTheme.colorScheme.onPrimaryContainer
@@ -219,7 +229,7 @@ private fun ExpenseListScreen(
                     Spacer(Modifier.height(4.dp))
 
                     Text(
-                        "$totalExpensesCount lançamento(s)",
+                        "$displayCount lançamento(s)",
                         style = MaterialTheme.typography.bodyMedium,
                         color = MaterialTheme.colorScheme.onPrimaryContainer.copy(alpha = 0.8f)
                     )
@@ -290,7 +300,7 @@ private fun ExpenseListScreen(
                         )
                         Spacer(Modifier.height(12.dp))
                         Text(
-                            text = if (totalExpensesCount == 0)
+                            text = if (totalExpensesCountOverall == 0)
                                 "Nenhum gasto cadastrado ainda."
                             else
                                 "Nenhum gasto nesta categoria.",
@@ -299,7 +309,7 @@ private fun ExpenseListScreen(
                         )
                         Spacer(Modifier.height(4.dp))
                         Text(
-                            text = if (totalExpensesCount == 0)
+                            text = if (totalExpensesCountOverall == 0)
                                 "Toque no botão + para começar."
                             else
                                 "Selecione outra categoria ou adicione um novo gasto.",
